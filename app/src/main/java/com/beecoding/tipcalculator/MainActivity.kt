@@ -4,10 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -45,7 +48,11 @@ fun TipCalculatorApp() {
 
     var amountInput by remember { mutableStateOf("") }
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount)
+
+    var tipPercentageInput by remember { mutableStateOf("15") }
+    val tipPercentage = tipPercentageInput.toDoubleOrNull() ?: 15.0
+
+    val tip = calculateTip(amount, tipPercentage)
 
     Column(
         modifier = Modifier
@@ -64,6 +71,16 @@ fun TipCalculatorApp() {
         EditNumberField(
             value = amountInput,
             onValueChange = { newValue -> amountInput = newValue },
+            labelResId = R.string.bill_amount,
+            modifier = Modifier
+                .padding(bottom = 16.dp)
+                .fillMaxWidth()
+        )
+
+        EditNumberField(
+            value = tipPercentageInput,
+            onValueChange = { newValue -> tipPercentageInput = newValue },
+            labelResId = R.string.tip_percentage,
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth()
@@ -76,6 +93,8 @@ fun TipCalculatorApp() {
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
+
+        Spacer(modifier = Modifier.height(150.dp))
     }
 }
 
@@ -83,13 +102,14 @@ fun TipCalculatorApp() {
 fun EditNumberField(
     value: String,
     onValueChange: (String) -> Unit,
+    @StringRes labelResId: Int,
     modifier: Modifier = Modifier
 ) {
     TextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
-        label = { Text(text = stringResource(R.string.bill_amount)) },
+        label = { Text(text = stringResource(labelResId)) },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
