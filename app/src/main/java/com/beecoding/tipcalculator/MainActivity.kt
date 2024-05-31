@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.beecoding.tipcalculator.ui.theme.TipCalculatorTheme
+import org.jetbrains.annotations.VisibleForTesting
 import java.text.NumberFormat
 import kotlin.math.ceil
 
@@ -167,7 +168,10 @@ fun EditNumberField(
     )
 }
 
-private fun calculateTip(
+// calculateTip() method has to be internal to be accessible from the test
+// This makes the method public, but indicates to others that it's only public for testing purposes
+@VisibleForTesting
+internal fun calculateTip(
     billAmount: Double,
     tipPercent: Double = 15.0,
     roundUp: Boolean
